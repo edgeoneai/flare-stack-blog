@@ -16,9 +16,13 @@ export const PostSelectSchema = createSelectSchema(PostsTable, {
   publishedAt: coercedDateNullable,
   createdAt: coercedDate,
   updatedAt: coercedDate,
+}).omit({
+  publicContentJson: true,
 });
 export const PostInsertSchema = createInsertSchema(PostsTable);
-export const PostUpdateSchema = createUpdateSchema(PostsTable);
+export const PostUpdateSchema = createUpdateSchema(PostsTable).omit({
+  publicContentJson: true,
+});
 
 export const PostItemSchema = PostSelectSchema.omit({
   contentJson: true,
@@ -108,7 +112,7 @@ export type UpdatePostInput = z.infer<typeof UpdatePostInputSchema>;
 export type DeletePostInput = z.infer<typeof DeletePostInputSchema>;
 export type PreviewSummaryInput = z.infer<typeof PreviewSummaryInputSchema>;
 export type StartPostProcessInput = z.infer<typeof StartPostProcessInputSchema>;
-export type PostListItem = Omit<Post, "contentJson"> & {
+export type PostListItem = Omit<Post, "contentJson" | "publicContentJson"> & {
   tags?: Array<Tag>;
 };
 

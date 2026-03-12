@@ -258,6 +258,22 @@ export async function updatePost(
   return await findPostById(db, id);
 }
 
+export async function updatePublicContentSnapshot(
+  db: DB,
+  id: number,
+  publicContentJson: typeof PostsTable.$inferInsert.publicContentJson,
+) {
+  await db
+    .update(PostsTable)
+    .set({
+      publicContentJson,
+      // Snapshot rebuilds should not affect editorial ordering/history.
+      updatedAt: sql`${PostsTable.updatedAt}`,
+    })
+    .where(eq(PostsTable.id, id));
+  return await findPostById(db, id);
+}
+
 export async function deletePost(db: DB, id: number) {
   await db.delete(PostsTable).where(eq(PostsTable.id, id));
 }
